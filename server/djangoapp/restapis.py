@@ -1,7 +1,7 @@
 import requests
 import json
 # import related models here
-from .models import CarDealer
+from .models import CarDealer, DealerReview
 from requests.auth import HTTPBasicAuth
 
 
@@ -73,6 +73,35 @@ def get_dealer_by_id(url, dealer_id):
 # def get_dealer_by_id_from_cf(url, dealerId):
 # - Call get_request() with specified arguments
 # - Parse JSON results into a DealerView object list
+def get_dealer_reviews_from_cf(url, dealerId):
+    results = []
+    # Call get_request with a URL parameter
+    json_result = get_request(url,dealerId=dealerId)
+    if json_result:
+        reviews = json_result["data"]["docs"]
+        #print(json.dumps(reviews, indent=4))
+        # For each review object
+        for rev in reviews:
+            # Create a DealerReview object with values returned from CF
+            # Existing data set has records that may not contain:
+            #   car_make=None, car_model=None, car_year=None, purchase_date=None, sentiment="neutral")
+            review_obj = DealerReview(dealership=rev["dealership"], id=rev["id"], name=rev["name"],
+                                   purchase=rev["purchase"], review=rev["review"],
+                                   )
+            if "purchase_date" in rev:
+                review_obj.purchase_date = rev["purchase_date"]
+            if "car_make" in rev:
+                review_obj.car_make = rev["car_make"]
+            if "car_model" in rev:
+                review_obj.car_model = rev["car_model"]
+            if "car_year" in rev:
+                review_obj.car_year = rev["car_year"]
+            #
+            # TODO: get sentiment from Watson
+            #
+            results.append(review_obj)
+
+    return results
 
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
