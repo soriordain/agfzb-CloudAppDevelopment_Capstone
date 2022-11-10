@@ -71,17 +71,16 @@ def get_dealers_from_cf(url, **kwargs):
 
 # Function to return a dealer object given it's ID
 def get_dealer_by_id(url, dealer_id):
-    # Call get_request with the dealer_id param
-    json_result = get_request(url, dealerId=dealer_id)
+    results = []
+    # Call get_request with the dealer_id param   
+    json_result = get_request(url, id=dealer_id)
 
     # Create a CarDealer object from response
     dealer = json_result[0]
-
     dealer_obj = CarDealer(address=dealer["address"], city=dealer["city"], full_name=dealer["full_name"],
                            id=dealer["id"], lat=dealer["lat"], long=dealer["long"],
                            short_name=dealer["short_name"],
-                           st=dealer["st"], state=dealer["state"], zip=dealer["zip"])
-
+                           st=dealer["st"], zip=dealer["zip"])
     return dealer_obj
 
 # Function to return dealer object given the state
@@ -92,7 +91,7 @@ def get_dealers_by_state(url, state):
     if json_result:
         # Get the row list in JSON as dealers
         dealers = json_result
-        # print(json.dumps(dealers, indent=4))
+        # 
         # For each dealer object
         for dealer_doc in dealers:
 
@@ -123,7 +122,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
             # Create a DealerReview object with values returned from CF
             # Existing data set has records that may not contain:
             #   car_make=None, car_model=None, car_year=None, purchase_date=None, sentiment="neutral")
-            review_obj = DealerReview(dealership=rev["dealership"], id=rev["id"], name=rev["name"],
+            review_obj = DealerReview(dealership=rev["dealership"], name=rev["name"],
                                    purchase=rev["purchase"], review=rev["review"],
                                    )
             if "purchase_date" in rev:

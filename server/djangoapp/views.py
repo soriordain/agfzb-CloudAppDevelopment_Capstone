@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
 from .models import CarDealer, CarMake, CarModel
 # from .restapis import related methods
-from .restapis import get_request, get_dealers_from_cf, get_dealer_reviews_from_cf, get_dealers_by_state
+from .restapis import get_request, get_dealers_from_cf, get_dealer_reviews_from_cf, get_dealers_by_state, get_dealer_by_id, post_request
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -113,9 +113,14 @@ def add_review(request, dealer_id):
     print(f"add_review: user authenticated: {request.user.is_authenticated}")
     if request.user.is_authenticated:
         if request.method == "GET":
-            # Get reviews from the URL
+            # Get dealer object via id
+            url = "https://eu-de.functions.appdomain.cloud/api/v1/web/OpentecSolutions_djangoserver-space/dealership-package/get-dealership"
+            dealer = get_dealer_by_id(url,dealer_id)
+            # Get cars
+            cars = CarModel.objects.all()
 
-            context["dealerId"] = dealer_id
+            context["cars"] = cars
+            context["dealer"] = dealer
             return render(request, 'djangoapp/add_review.html', context)
 
         if request.method == "POST":
@@ -125,28 +130,27 @@ def add_review(request, dealer_id):
             review["name"] = f"{request.user.first_name} {request.user.last_name}"
             review["dealership"] = dealer_id
             review["review"] = form["content"]
-            review["purchase"] = form.get("purchasecheck")
-            if review["purchase"]:
-                review["purchase_date"] = datetime.strptime(form.get("purchasedate"), "%m/%d/%Y").isoformat()
+            review["purchase"] = False
+            if form.get("purchasecheck") == 'on':
+                review["purchase"] = True
+                review["purchase_date"] = form.get("purchasedate")
+            else:
+                review["purchase_date"] = None
+
             car = CarModel.objects.get(pk=form["car"])
             review["car_make"] = car.car_make.name
             review["car_model"] = car.name
             review["car_year"] = car.year
 
-            # If the user bought the car, get the purchase date
-            if form.get("purchasecheck"):
-                review["purchase_date"] = datetime.strptime(form.get("purchasedate"), "%m/%d/%Y").isoformat()
-            else:
-                review["purchase_date"] = None
-
             url = "https://eu-de.functions.appdomain.cloud/api/v1/web/OpentecSolutions_djangoserver-space/dealership-package/post-review"
             json_payload = {"review": review}  # Create a JSON payload that contains the review data
 
+            print(json.dumps(json_payload, indent=2))
             # Performing a POST request with the review
             result = post_request(url, json_payload, dealerId=dealer_id)
-            print(f"POST Status: {result.status_code}")
+            print(f"Status Code after POST: {result.status_code}")
 
-            # After posting the review the user is redirected back to the dealer details page
+            print("add_review: end")
             return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
 
     else:
