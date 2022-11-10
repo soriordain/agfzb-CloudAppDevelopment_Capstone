@@ -1,6 +1,12 @@
 {% extends 'home_template.html' %}
 {% block content %}
 
+{% if user.is_authenticated %}
+    <div style="margin: 10px;">
+            <a class="btn btn-primary" href="{% url 'djangoapp:add_review' dealerId %}"><b>Add a car review</b></a>
+    </div>
+{% endif %}
+
 <div class="container">
     <h2 class="heading-txt" style="font-size: 2em; margin-bottom: 3%; text-align: center;">Dealership Reviews</h2>
 
