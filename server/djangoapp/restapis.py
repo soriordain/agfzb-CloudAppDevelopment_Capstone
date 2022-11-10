@@ -84,6 +84,29 @@ def get_dealer_by_id(url, dealer_id):
 
     return dealer_obj
 
+# Function to return dealer object given the state
+def get_dealers_by_state(url, state):
+    results = []
+    # Call get_request with the state param
+    json_result = get_request(url, st=state)
+    if json_result:
+        # Get the row list in JSON as dealers
+        dealers = json_result
+        # print(json.dumps(dealers, indent=4))
+        # For each dealer object
+        for dealer_doc in dealers:
+
+            # Create a CarDealer object with values in `doc` object
+            dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],
+                                   id=dealer_doc["id"], lat=dealer_doc["lat"], long=dealer_doc["long"],
+                                   short_name=dealer_doc["short_name"],
+                                   st=dealer_doc["st"], zip=dealer_doc["zip"])
+            results.append(dealer_obj)
+    else:
+        print ("get_dealer_by_state: no results!")
+
+    return results
+
 # Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
 # def get_dealer_by_id_from_cf(url, dealerId):
 # - Call get_request() with specified arguments
