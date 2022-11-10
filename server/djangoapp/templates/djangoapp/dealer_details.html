@@ -8,12 +8,13 @@
 {% endif %}
 
 <div class="container">
-    <h2 class="heading-txt" style="font-size: 2em; margin-bottom: 3%; text-align: center;">Dealership Reviews</h2>
+    <h2 class="heading-txt" style="font-size: 2em; margin-bottom: 3%; text-align: center;">Dealership Information</h2>
 
     <div class="card" style="max-width: ">
-        <div class="card-header"><h5>Dealership Information</h5></div>
+        <div class="card-header"><h5>{{dealer.full_name}}</h5></div>
         <div class="card-body">
-            <p class="card-text"></br> Dealership info for dealer {{dealerId}}</p>
+            <p class="card-text">Address:  {{dealer.address}}, {{dealer.city}}, {{dealer.st}}, {{dealer.zip}}</p>
+            <a class="card-text" href="https://www.latlong.net/c/?lat={{dealer.lat}}&long={{dealer.long}}">Location: ({{dealer.lat}},{{dealer.long}})</a>
         </div>
     </div>
 

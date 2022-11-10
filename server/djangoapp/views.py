@@ -99,6 +99,11 @@ def get_dealerships(request):
 def get_dealer_details(request, dealer_id):
     if request.method == "GET":
         context = {}
+
+        url = "https://eu-de.functions.appdomain.cloud/api/v1/web/OpentecSolutions_djangoserver-space/dealership-package/get-dealership"
+        dealer = get_dealer_by_id(url,dealer_id)       
+        context["dealer"] = dealer
+
         url = "https://eu-de.functions.appdomain.cloud/api/v1/web/OpentecSolutions_djangoserver-space/dealership-package/get-reviews"
         # Get reviews from the URL
         reviews = get_dealer_reviews_from_cf(url, dealerId=dealer_id)
