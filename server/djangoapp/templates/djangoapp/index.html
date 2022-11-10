@@ -13,14 +13,14 @@
                     <th data-field="city">City</th>
                     <th data-field="address">Address</th>
                     <th data-field="zip">Zip</th>
-                    <th data-field="state">State</th>
+                    <th data-field="state" data-filter-control="select">State</th>
                 </tr>
             </thead>
             <tbody>
                 {% for dealer in dealership_list %}
                 <tr>
-                    <td><a href="#">{{dealer.id}}</td>
-                    <td>{{dealer.full_name}}</a></td>
+                    <td>{{dealer.id}}</td>
+                    <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">{{dealer.full_name}}</a></td>
                     <td>{{dealer.city}}</td>
                     <td>{{dealer.address}}</td>
                     <td>{{dealer.zip}}</td>
