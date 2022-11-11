@@ -1,8 +1,16 @@
 {% extends 'home_template.html' %}
 {% block content %}
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+<link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
+<script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script>
+
+
 <div class="container">
-    <h2 class="heading-txt" style="font-size: 2em; margin-bottom: 3%; text-align: center;">Add Review: {{dealer.full_name}}</h2>
+    <h2 class="heading-txt" style="font-size: 2em; margin-bottom: 3%; text-align: center;">Add Review for {{dealer.full_name}}</h2>
     {% if message %}
     <div class="alert alert-warning"> <!--Style the message paragraph with .alert and .alert-warning class -->
       {{ message }}
