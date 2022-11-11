@@ -134,6 +134,7 @@ def add_review(request, dealer_id):
             review = dict()
             review["name"] = f"{request.user.first_name} {request.user.last_name}"
             review["dealership"] = dealer_id
+            review["time"] = datetime.utcnow().isoformat()
             review["review"] = form["content"]
             review["purchase"] = False
             if form.get("purchasecheck") == 'on':
